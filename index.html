@@ -4,8 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NovaRevolt | Addictive Voyage</title>
+
+<style>
+
+/* ================= ロゴ基本 ================= */
+
+.logo h1 {
+    font-size: 3.2rem;
+    margin: 0;
+    letter-spacing: 6px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.logo h1:first-child {
+    color: #00ffff;
+}
+
+.logo .voyage {
+    color: #ff00c8;
+}
+
+.tagline {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    opacity: 0.8;
+    letter-spacing: 2px;
+    color: white;
+}
+
+/* ================= ネオン脈動 ================= */
+
 @keyframes pulseCyan {
-    0% {
+    0%,100% {
         text-shadow:
             0 0 10px #00ffff,
             0 0 25px #00ffff,
@@ -17,16 +48,10 @@
             0 0 40px #00ffff,
             0 0 80px #00ffff;
     }
-    100% {
-        text-shadow:
-            0 0 10px #00ffff,
-            0 0 25px #00ffff,
-            0 0 50px #00ffff;
-    }
 }
 
 @keyframes pulsePink {
-    0% {
+    0%,100% {
         text-shadow:
             0 0 10px #ff00c8,
             0 0 25px #ff00c8,
@@ -38,15 +63,7 @@
             0 0 40px #ff00c8,
             0 0 80px #ff00c8;
     }
-    100% {
-        text-shadow:
-            0 0 10px #ff00c8,
-            0 0 25px #ff00c8,
-            0 0 50px #ff00c8;
-    }
 }
-
-/* アニメーション適用 */
 
 .logo h1:first-child {
     animation: pulseCyan 3s infinite ease-in-out;
@@ -55,37 +72,9 @@
 .logo .voyage {
     animation: pulsePink 3s infinite ease-in-out;
 }
-<style>
-.logo h1 {
-    font-size: 3.2rem;
-    margin: 0;
-    letter-spacing: 6px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
 
-.logo h1:first-child {
-    color: #00ffff;
-    text-shadow:
-        0 0 10px #00ffff,
-        0 0 25px #00ffff,
-        0 0 50px #00ffff;
-}
+/* ================= 背景 ================= */
 
-.logo .voyage {
-    color: #ff00c8;
-    text-shadow:
-        0 0 10px #ff00c8,
-        0 0 25px #ff00c8,
-        0 0 50px #ff00c8;
-}
-
-.tagline {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    opacity: 0.8;
-    letter-spacing: 2px;
-}
 body {
     margin: 0;
     min-height: 100vh;
@@ -100,7 +89,6 @@ body {
     padding-top: 100px;
 }
 
-/* ネオン光 */
 body::before {
     content: "";
     position: fixed;
@@ -111,26 +99,8 @@ body::before {
     pointer-events: none;
 }
 
-/* タイトル */
-h1 {
-    font-size: 3rem;
-    color: #00ffff;
-    text-shadow:
-        0 0 10px #00ffff,
-        0 0 20px #00ffff,
-        0 0 40px #00ffff;
-    margin: 0;
-}
+/* ================= カード ================= */
 
-/* サブ */
-p {
-    color: #ffffff;
-    opacity: 0.8;
-    margin-top: 15px;
-    font-size: 1.1rem;
-}
-
-/* カードエリア */
 .music-section {
     display: flex;
     gap: 30px;
@@ -147,6 +117,7 @@ p {
     border-radius: 15px;
     backdrop-filter: blur(10px);
     transition: 0.3s;
+    color: white;
 }
 
 .card:hover {
@@ -173,6 +144,7 @@ p {
     <h1>ADDICTIVE</h1>
     <h1 class="voyage">VOYAGE</h1>
 </div>
+
 <p class="tagline">NCS × Phonk × Endless Energy</p>
 
 <div class="music-section">
