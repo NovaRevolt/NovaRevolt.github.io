@@ -6,7 +6,6 @@
 <title>NovaRevolt | Addictive Voyage</title>
 
 <style>
-
 body {
     margin: 0;
     min-height: 100vh;
@@ -19,26 +18,20 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding-top: 100px;
+    overflow-x: hidden;
 }
 
-body::before {
-    content: "";
+/* 背景星粒 */
+#star-canvas {
     position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 25% 30%, rgba(0,255,255,0.2), transparent 40%),
-        radial-gradient(circle at 75% 70%, rgba(255,0,200,0.2), transparent 40%);
-    pointer-events: none;
-}
-
-@keyframes bgMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
 }
 
 /* ロゴ */
-
 .logo h1 {
     font-size: 3.2rem;
     margin: 0;
@@ -66,37 +59,16 @@ body::before {
 }
 
 @keyframes pulseCyan {
-    0%,100% {
-        text-shadow:
-            0 0 10px #00ffff,
-            0 0 25px #00ffff,
-            0 0 50px #00ffff;
-    }
-    50% {
-        text-shadow:
-            0 0 20px #00ffff,
-            0 0 40px #00ffff,
-            0 0 80px #00ffff;
-    }
+    0%,100% { text-shadow:0 0 10px #00ffff,0 0 25px #00ffff,0 0 50px #00ffff;}
+    50% { text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 80px #00ffff;}
 }
 
 @keyframes pulsePink {
-    0%,100% {
-        text-shadow:
-            0 0 10px #ff00c8,
-            0 0 25px #ff00c8,
-            0 0 50px #ff00c8;
-    }
-    50% {
-        text-shadow:
-            0 0 20px #ff00c8,
-            0 0 40px #ff00c8,
-            0 0 80px #ff00c8;
-    }
+    0%,100% { text-shadow:0 0 10px #ff00c8,0 0 25px #ff00c8,0 0 50px #ff00c8;}
+    50% { text-shadow:0 0 20px #ff00c8,0 0 40px #ff00c8,0 0 80px #ff00c8;}
 }
 
 /* カード */
-
 .music-section {
     display: flex;
     gap: 30px;
@@ -109,12 +81,12 @@ body::before {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(0,255,255,0.3);
     padding: 25px;
-    width: 560px;
-    max-width: 90%;
+    width: 300px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
     transition: 0.3s;
     color: white;
+    cursor: pointer;
 }
 
 .card:hover {
@@ -122,27 +94,57 @@ body::before {
     box-shadow: 0 0 20px #00ffff;
 }
 
-.card h2 {
-    color: #ff00c8;
-}
+.card h2 { color: #ff00c8; }
 
 /* スクロール登場 */
+.fade-in { opacity:0; transform:translateY(40px); transition: all 1s ease;}
+.fade-in.show { opacity:1; transform:translateY(0);}
 
-.fade-in {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 1s ease;
+/* モーダル */
+#modal-overlay {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.8);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
 }
 
-.fade-in.show {
-    opacity: 1;
-    transform: translateY(0);
+#modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
 }
 
+#modal-content iframe {
+    width:100%;
+    height:450px;
+    border-radius: 12px;
+}
+
+#modal-close {
+    position: absolute;
+    top:-20px;
+    right:-20px;
+    background:#ff00c8;
+    color:white;
+    border:none;
+    border-radius:50%;
+    width:40px;
+    height:40px;
+    font-size:1.5rem;
+    cursor:pointer;
+}
 </style>
 </head>
 
 <body>
+
+<canvas id="star-canvas"></canvas>
 
 <div class="logo fade-in">
     <h1>ADDICTIVE</h1>
@@ -152,36 +154,89 @@ body::before {
 <p class="tagline fade-in">NCS × Phonk × Endless Energy</p>
 
 <div class="music-section fade-in">
-    <div class="card">
+    <div class="card" data-video="J2X5mJ3HDYE">
         <h2>Featured Track</h2>
-        <p>Play the energy.</p>
+        <p>Click to play</p>
+    </div>
+</div>
 
-        <iframe width="100%" height="315"
-            src="https://www.youtube.com/embed/J2X5mJ3HDYE"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen>
-        </iframe>
-
+<!-- モーダル -->
+<div id="modal-overlay">
+    <div id="modal-content">
+        <button id="modal-close">&times;</button>
+        <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
 
 <script>
+// スクロール登場
 const faders = document.querySelectorAll('.fade-in');
-
-const appearOptions = { threshold: 0.2 };
-
-const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-    entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+const appearOnScroll = new IntersectionObserver(function(entries, observer){
+    entries.forEach(entry=>{
+        if(!entry.isIntersecting) return;
         entry.target.classList.add('show');
         observer.unobserve(entry.target);
     });
-}, appearOptions);
+},{threshold:0.2});
+faders.forEach(fader=>appearOnScroll.observe(fader));
 
-faders.forEach(fader => {
-    appearOnScroll.observe(fader);
+// モーダル再生
+const cards = document.querySelectorAll('.card');
+const modal = document.getElementById('modal-overlay');
+const modalIframe = document.getElementById('modal-iframe');
+const modalClose = document.getElementById('modal-close');
+
+cards.forEach(card=>{
+    card.addEventListener('click',()=>{
+        const videoId = card.dataset.video;
+        modal.style.display='flex';
+        modalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    });
+});
+
+modalClose.addEventListener('click',()=>{
+    modal.style.display='none';
+    modalIframe.src='';
+});
+
+modal.addEventListener('click',(e)=>{
+    if(e.target===modal) { modal.style.display='none'; modalIframe.src=''; }
+});
+
+// 星粒エフェクト
+const canvas = document.getElementById('star-canvas');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+
+let stars = [];
+for(let i=0;i<200;i++){
+    stars.push({
+        x:Math.random()*w,
+        y:Math.random()*h,
+        r:Math.random()*1.2+0.2,
+        d:Math.random()*0.5+0.05
+    });
+}
+
+function animateStars(){
+    ctx.clearRect(0,0,w,h);
+    for(let i=0;i<stars.length;i++){
+        let s=stars[i];
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.8)';
+        ctx.fill();
+        s.y -= s.d;
+        if(s.y<0) s.y = h;
+    }
+    requestAnimationFrame(animateStars);
+}
+animateStars();
+
+window.addEventListener('resize',()=>{
+    w=canvas.width=window.innerWidth;
+    h=canvas.height=window.innerHeight;
 });
 </script>
 
