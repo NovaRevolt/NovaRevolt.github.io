@@ -7,8 +7,6 @@
 
 <style>
 
-/* ================= 背景 ================= */
-
 body {
     margin: 0;
     min-height: 100vh;
@@ -39,7 +37,7 @@ body::before {
     100% { background-position: 0% 50%; }
 }
 
-/* ================= ロゴ ================= */
+/* ロゴ */
 
 .logo h1 {
     font-size: 3.2rem;
@@ -66,8 +64,6 @@ body::before {
     letter-spacing: 2px;
     color: white;
 }
-
-/* ネオン脈動 */
 
 @keyframes pulseCyan {
     0%,100% {
@@ -99,7 +95,7 @@ body::before {
     }
 }
 
-/* ================= カード ================= */
+/* カード */
 
 .music-section {
     display: flex;
@@ -113,7 +109,7 @@ body::before {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(0,255,255,0.3);
     padding: 25px;
-    width: 220px;
+    width: 300px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
     transition: 0.3s;
@@ -129,7 +125,12 @@ body::before {
     color: #ff00c8;
 }
 
-/* ================= スクロール登場 ================= */
+iframe {
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+/* スクロール登場 */
 
 .fade-in {
     opacity: 0;
@@ -156,27 +157,22 @@ body::before {
 
 <div class="music-section fade-in">
     <div class="card">
-        <h2>NCS Energy</h2>
-        <p>High voltage gaming tracks</p>
-    </div>
+        <h2>Featured Track</h2>
+        <p>Play the energy.</p>
 
-    <div class="card">
-        <h2>Phonk Drift</h2>
-        <p>Dark & addictive bass</p>
-    </div>
-
-    <div class="card">
-        <h2>Endless Boost</h2>
-        <p>Workout & Focus mode</p>
+        <iframe width="100%" height="200"
+            src="https://www.youtube.com/embed/e3bNA-UQSTHXqLoz"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
     </div>
 </div>
 
 <script>
 const faders = document.querySelectorAll('.fade-in');
 
-const appearOptions = {
-    threshold: 0.2
-};
+const appearOptions = { threshold: 0.2 };
 
 const appearOnScroll = new IntersectionObserver(function(entries, observer) {
     entries.forEach(entry => {
