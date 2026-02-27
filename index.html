@@ -4,7 +4,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NovaRevolt | Addictive Voyage</title>
+@keyframes pulseCyan {
+    0% {
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 25px #00ffff,
+            0 0 50px #00ffff;
+    }
+    50% {
+        text-shadow:
+            0 0 20px #00ffff,
+            0 0 40px #00ffff,
+            0 0 80px #00ffff;
+    }
+    100% {
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 25px #00ffff,
+            0 0 50px #00ffff;
+    }
+}
 
+@keyframes pulsePink {
+    0% {
+        text-shadow:
+            0 0 10px #ff00c8,
+            0 0 25px #ff00c8,
+            0 0 50px #ff00c8;
+    }
+    50% {
+        text-shadow:
+            0 0 20px #ff00c8,
+            0 0 40px #ff00c8,
+            0 0 80px #ff00c8;
+    }
+    100% {
+        text-shadow:
+            0 0 10px #ff00c8,
+            0 0 25px #ff00c8,
+            0 0 50px #ff00c8;
+    }
+}
+
+/* アニメーション適用 */
+
+.logo h1:first-child {
+    animation: pulseCyan 3s infinite ease-in-out;
+}
+
+.logo .voyage {
+    animation: pulsePink 3s infinite ease-in-out;
+}
 <style>
 .logo h1 {
     font-size: 3.2rem;
