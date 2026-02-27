@@ -4,7 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NovaRevolt | Addictive Voyage</title>
+.music-section {
+    display: flex;
+    gap: 30px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
+.card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,255,255,0.3);
+    padding: 25px;
+    width: 220px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 20px #00ffff;
+}
+
+.card h2 {
+    color: #ff00c8;
+}
 <style>
 body {
     margin: 0;
@@ -62,6 +87,23 @@ p {
 
 <h1>ADDICTIVE VOYAGE</h1>
 <p>NCS × Phonk × Endless Energy</p>
+
+<div class="music-section">
+    <div class="card">
+        <h2>NCS Energy</h2>
+        <p>High voltage gaming tracks</p>
+    </div>
+
+    <div class="card">
+        <h2>Phonk Drift</h2>
+        <p>Dark & addictive bass</p>
+    </div>
+
+    <div class="card">
+        <h2>Endless Boost</h2>
+        <p>Workout & Focus mode</p>
+    </div>
+</div>
 
 </body>
 </html>
