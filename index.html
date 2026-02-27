@@ -7,7 +7,39 @@
 
 <style>
 
-/* ================= ロゴ基本 ================= */
+/* ================= 背景 ================= */
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #050510, #0a0f1f, #050510);
+    background-size: 300% 300%;
+    animation: bgMove 15s ease infinite;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding-top: 100px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 25% 30%, rgba(0,255,255,0.2), transparent 40%),
+        radial-gradient(circle at 75% 70%, rgba(255,0,200,0.2), transparent 40%);
+    pointer-events: none;
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ================= ロゴ ================= */
 
 .logo h1 {
     font-size: 3.2rem;
@@ -19,10 +51,12 @@
 
 .logo h1:first-child {
     color: #00ffff;
+    animation: pulseCyan 3s infinite ease-in-out;
 }
 
 .logo .voyage {
     color: #ff00c8;
+    animation: pulsePink 3s infinite ease-in-out;
 }
 
 .tagline {
@@ -33,7 +67,7 @@
     color: white;
 }
 
-/* ================= ネオン脈動 ================= */
+/* ネオン脈動 */
 
 @keyframes pulseCyan {
     0%,100% {
@@ -63,40 +97,6 @@
             0 0 40px #ff00c8,
             0 0 80px #ff00c8;
     }
-}
-
-.logo h1:first-child {
-    animation: pulseCyan 3s infinite ease-in-out;
-}
-
-.logo .voyage {
-    animation: pulsePink 3s infinite ease-in-out;
-}
-
-/* ================= 背景 ================= */
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: linear-gradient(135deg, #050510, #0a0f1f, #050510);
-    background-size: 300% 300%;
-    animation: bgMove 15s ease infinite;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding-top: 100px;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 25% 30%, rgba(0,255,255,0.2), transparent 40%),
-        radial-gradient(circle at 75% 70%, rgba(255,0,200,0.2), transparent 40%);
-    pointer-events: none;
 }
 
 /* ================= カード ================= */
@@ -129,10 +129,17 @@ body::before {
     color: #ff00c8;
 }
 
-@keyframes bgMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* ================= スクロール登場 ================= */
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s ease;
+}
+
+.fade-in.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 </style>
@@ -140,14 +147,14 @@ body::before {
 
 <body>
 
-<div class="logo">
+<div class="logo fade-in">
     <h1>ADDICTIVE</h1>
     <h1 class="voyage">VOYAGE</h1>
 </div>
 
-<p class="tagline">NCS × Phonk × Endless Energy</p>
+<p class="tagline fade-in">NCS × Phonk × Endless Energy</p>
 
-<div class="music-section">
+<div class="music-section fade-in">
     <div class="card">
         <h2>NCS Energy</h2>
         <p>High voltage gaming tracks</p>
@@ -163,6 +170,26 @@ body::before {
         <p>Workout & Focus mode</p>
     </div>
 </div>
+
+<script>
+const faders = document.querySelectorAll('.fade-in');
+
+const appearOptions = {
+    threshold: 0.2
+};
+
+const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('show');
+        observer.unobserve(entry.target);
+    });
+}, appearOptions);
+
+faders.forEach(fader => {
+    appearOnScroll.observe(fader);
+});
+</script>
 
 </body>
 </html>
