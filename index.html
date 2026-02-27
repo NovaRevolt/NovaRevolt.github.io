@@ -20,9 +20,7 @@ body {
     padding-top: 100px;
     overflow-x: hidden;
 }
-
-/* 背景星粒 */
-#star-canvas {
+#star-canvas, #shooting-canvas {
     position: fixed;
     top:0;
     left:0;
@@ -39,17 +37,14 @@ body {
     font-weight: bold;
     text-transform: uppercase;
 }
-
 .logo h1:first-child {
     color: #00ffff;
     animation: pulseCyan 3s infinite ease-in-out;
 }
-
 .logo .voyage {
     color: #ff00c8;
     animation: pulsePink 3s infinite ease-in-out;
 }
-
 .tagline {
     margin-top: 20px;
     font-size: 1.1rem;
@@ -62,7 +57,6 @@ body {
     0%,100% { text-shadow:0 0 10px #00ffff,0 0 25px #00ffff,0 0 50px #00ffff;}
     50% { text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 80px #00ffff;}
 }
-
 @keyframes pulsePink {
     0%,100% { text-shadow:0 0 10px #ff00c8,0 0 25px #ff00c8,0 0 50px #ff00c8;}
     50% { text-shadow:0 0 20px #ff00c8,0 0 40px #ff00c8,0 0 80px #ff00c8;}
@@ -76,7 +70,6 @@ body {
     flex-wrap: wrap;
     justify-content: center;
 }
-
 .card {
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(0,255,255,0.3);
@@ -88,12 +81,7 @@ body {
     color: white;
     cursor: pointer;
 }
-
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 0 20px #00ffff;
-}
-
+.card:hover { transform: translateY(-10px); box-shadow: 0 0 20px #00ffff; }
 .card h2 { color: #ff00c8; }
 
 /* スクロール登場 */
@@ -113,19 +101,16 @@ body {
     align-items:center;
     z-index:10;
 }
-
 #modal-content {
     position: relative;
     width: 90%;
     max-width: 800px;
 }
-
 #modal-content iframe {
     width:100%;
     height:450px;
     border-radius: 12px;
 }
-
 #modal-close {
     position: absolute;
     top:-20px;
@@ -145,6 +130,7 @@ body {
 <body>
 
 <canvas id="star-canvas"></canvas>
+<canvas id="shooting-canvas"></canvas>
 
 <div class="logo fade-in">
     <h1>ADDICTIVE</h1>
@@ -160,11 +146,12 @@ body {
     </div>
 </div>
 
-<!-- モーダル -->
 <div id="modal-overlay">
     <div id="modal-content">
         <button id="modal-close">&times;</button>
-        <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="modal-iframe" src="" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
     </div>
 </div>
 
@@ -180,30 +167,45 @@ const appearOnScroll = new IntersectionObserver(function(entries, observer){
 },{threshold:0.2});
 faders.forEach(fader=>appearOnScroll.observe(fader));
 
-// モーダル再生
+// モーダル再生 + ネオン光制御
 const cards = document.querySelectorAll('.card');
 const modal = document.getElementById('modal-overlay');
 const modalIframe = document.getElementById('modal-iframe');
 const modalClose = document.getElementById('modal-close');
+const logoCyan = document.querySelector('.logo h1:first-child');
+const logoPink = document.querySelector('.logo .voyage');
+
+let pulseInterval;
 
 cards.forEach(card=>{
     card.addEventListener('click',()=>{
         const videoId = card.dataset.video;
         modal.style.display='flex';
         modalIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+
+        // ビートっぽくロゴ光らせる簡易処理
+        pulseInterval = setInterval(()=>{
+            logoCyan.style.textShadow = `0 0 ${Math.random()*40+10}px #00ffff,0 0 ${Math.random()*50+20}px #00ffff,0 0 ${Math.random()*80+40}px #00ffff`;
+            logoPink.style.textShadow = `0 0 ${Math.random()*40+10}px #ff00c8,0 0 ${Math.random()*50+20}px #ff00c8,0 0 ${Math.random()*80+40}px #ff00c8`;
+        }, 200);
     });
 });
 
-modalClose.addEventListener('click',()=>{
+function closeModal(){
     modal.style.display='none';
     modalIframe.src='';
+    clearInterval(pulseInterval);
+    // 戻す通常の脈動
+    logoCyan.style.animation = 'pulseCyan 3s infinite ease-in-out';
+    logoPink.style.animation = 'pulsePink 3s infinite ease-in-out';
+}
+
+modalClose.addEventListener('click', closeModal);
+modal.addEventListener('click', (e)=>{
+    if(e.target===modal) closeModal();
 });
 
-modal.addEventListener('click',(e)=>{
-    if(e.target===modal) { modal.style.display='none'; modalIframe.src=''; }
-});
-
-// 星粒エフェクト
+// 星粒
 const canvas = document.getElementById('star-canvas');
 const ctx = canvas.getContext('2d');
 let w = canvas.width = window.innerWidth;
@@ -211,32 +213,63 @@ let h = canvas.height = window.innerHeight;
 
 let stars = [];
 for(let i=0;i<200;i++){
-    stars.push({
-        x:Math.random()*w,
-        y:Math.random()*h,
-        r:Math.random()*1.2+0.2,
-        d:Math.random()*0.5+0.05
-    });
+    stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+0.2,d:Math.random()*0.5+0.05});
 }
 
 function animateStars(){
     ctx.clearRect(0,0,w,h);
-    for(let i=0;i<stars.length;i++){
-        let s=stars[i];
+    stars.forEach(s=>{
         ctx.beginPath();
         ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
         ctx.fillStyle='rgba(255,255,255,0.8)';
         ctx.fill();
         s.y -= s.d;
         if(s.y<0) s.y = h;
-    }
+    });
     requestAnimationFrame(animateStars);
 }
 animateStars();
 
-window.addEventListener('resize',()=>{
-    w=canvas.width=window.innerWidth;
-    h=canvas.height=window.innerHeight;
+// 流れ星
+const shootingCanvas = document.getElementById('shooting-canvas');
+const shootingCtx = shootingCanvas.getContext('2d');
+shootingCanvas.width = w;
+shootingCanvas.height = h;
+let shootingStars = [];
+
+function createShootingStar(){
+    shootingStars.push({
+        x: Math.random()*w,
+        y: Math.random()*h/2,
+        len: Math.random()*80+20,
+        speed: Math.random()*10+6,
+        angle: Math.PI/4
+    });
+}
+
+function animateShooting(){
+    shootingCtx.clearRect(0,0,w,h);
+    shootingStars.forEach((s,i)=>{
+        shootingCtx.beginPath();
+        shootingCtx.moveTo(s.x, s.y);
+        shootingCtx.lineTo(s.x + s.len*Math.cos(s.angle), s.y + s.len*Math.sin(s.angle));
+        shootingCtx.strokeStyle='white';
+        shootingCtx.lineWidth=1.5;
+        shootingCtx.stroke();
+        s.x += s.speed*Math.cos(s.angle);
+        s.y += s.speed*Math.sin(s.angle);
+        if(s.x> w || s.y> h){ shootingStars.splice(i,1); }
+    });
+    requestAnimationFrame(animateShooting);
+}
+animateShooting();
+setInterval(createShootingStar, 1500);
+
+window.addEventListener('resize', ()=>{
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    shootingCanvas.width = w;
+    shootingCanvas.height = h;
 });
 </script>
 
