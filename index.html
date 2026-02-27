@@ -1,11 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>NovaRevolt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaRevolt | Addictive Voyage</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #050510, #0a0f1f, #050510);
+    background-size: 300% 300%;
+    animation: bgMove 15s ease infinite;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+/* ネオン光 */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 25% 30%, rgba(0,255,255,0.2), transparent 40%),
+        radial-gradient(circle at 75% 70%, rgba(255,0,200,0.2), transparent 40%);
+    pointer-events: none;
+}
+
+/* タイトル */
+h1 {
+    font-size: 3rem;
+    color: #00ffff;
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 40px #00ffff;
+    margin: 0;
+}
+
+/* サブ */
+p {
+    color: #ffffff;
+    opacity: 0.8;
+    margin-top: 15px;
+    font-size: 1.1rem;
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+</style>
 </head>
-<body style="background:black; color:white; text-align:center; padding-top:100px; font-family:Arial;">
+
+<body>
+
 <h1>ADDICTIVE VOYAGE</h1>
-<p>Site is back.</p>
+<p>NCS × Phonk × Endless Energy</p>
+
 </body>
 </html>
